@@ -1,0 +1,258 @@
+body{
+    background: #f9f9f9;
+    
+}
+
+/* 主页整个容器布局样式 */
+html,body,#app,.el-container{
+    height: 100%;
+}
+
+.el-header, .el-footer {
+    color: #333; 
+  }
+  
+  .el-header{
+    margin-top: 38px;
+  
+  }
+
+  .el-header h2{
+      font-size: 24px;
+      font-weight: bold;  
+  }
+
+  .el-header p{
+      margin: 14px 0px 26px 0px;
+  }
+
+  .el-aside {
+    background: url(../images/nav-bg.png) repeat-y;
+  }
+  
+  .el-main {
+    color: #333;
+  }
+  
+  body > .el-container {
+    margin-bottom: 40px;
+  }
+  
+  .el-container:nth-child(5) .el-aside,
+  .el-container:nth-child(6) .el-aside {
+    line-height: 260px;
+  }
+  
+  .el-container:nth-child(7) .el-aside {
+    line-height: 320px;
+  }
+
+  /* 右侧主体内容卡片样式 */
+  .text {
+    font-size: 14px;
+  }
+
+  .item {
+    margin-bottom: 18px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+  /* 右侧系统信息title和提示框样式 */
+  .el-card__header{
+    font-size: 16px;
+    font-weight: bold;
+    background: url(../images/el-card-title.png) repeat-x;
+    padding: 11px 20px;
+  }
+
+  .el-main .infoTop{
+    background: #dbe3ff;
+  }
+
+  .el-main .infoBtm{
+    background: #dbe3ff;
+    margin: 14px 0px;
+  }
+
+  /* 右侧系统信息下方左右布局 */
+  .el-row {
+    margin-bottom: 20px;
+    /* &:last-child {
+      margin-bottom: 0;
+    } */
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }  
+
+  /* 尾部 */
+  .el-footer{
+    line-height: 59px;
+    font-size: 12px;
+  }
+  .el-footer p{
+    border-top: solid 1px #ccc;
+  }
+
+  /* 左侧导航栏 */
+  .el-menu {
+    background: transparent;
+    border-right: none;
+  }
+
+  .el-submenu__icon-arrow{
+    display: none;
+  }
+
+  .el-submenu__title{
+    background: url(../images/menu_bg.png) repeat-x;
+    height: 32px;
+    line-height: 32px;
+    width: 180px;
+    margin-left: 20px;
+    border-radius: 4px 0 0 4px;
+    color: #fff;
+    text-align: right;
+  }
+
+  .el-submenu .el-menu-item{
+    height: 33px;
+    line-height: 33px;
+    width: 180px;
+    margin-left: 20px;
+    border-radius: 4px 0 0 4px;
+    color: #fff;
+    text-align: right;
+    padding:0 20px !important;
+    min-width: 180px;
+  }
+
+  .el-submenu{
+    margin-bottom: 10px;
+  }
+
+   .el-menu-item:focus{ 
+    color: #333;
+    background-color:#ecf5ff;    
+  }
+
+  .el-menu-item:hover a{
+    color: #333;
+  }
+
+  .el-menu-item.is-active a{
+    color: rgb(255, 215, 38);
+  }
+
+  #leftNavTop{
+    margin: 30px 0px;
+    font-size: 14px;
+    text-align: right;
+    padding-right: 20px;
+    color: #fff;
+  }
+
+  #leftNavTop h1{
+    font-size: 20px;
+    font-weight: 100;
+    margin-bottom: 40px;
+  }
+
+  #leftNavTop p{
+    margin-top: 20px;
+  }
+
+  /* 账号添加页面，输入框的宽度 */
+  .el-form-item__content{
+    width: 40%;
+  }
+ /* 会员管理，账号管理页面输入框的宽度 */ 
+  .vip_member_list .el-form-item__content{
+    width: 50%;
+  }
+
+  .vip_member_list .el-input{
+    width: 50% !important;
+  }
+
+  .vip_member_list .el-form{
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 20px;
+  }
+
+  /* 商品管理页面 */
+  .product_list .el-input{
+    width: 80% !important;
+    float: left;
+  }
+
+  .product_list .el-form div{
+    float: left;
+  }
+
+  .product_list .el-form{
+    border-bottom: 2px solid #ccc;
+  }
+
+  .product_list .el-form-item__content{
+    margin-left: 0px !important;
+  }
+
+  .product_list .keyWords .el-input{
+    width: 50% !important;
+  } 
+
+  .product_list .keyWords .el-form-item__content{
+    width: 600px !important;
+  }
+
+  .product_list .el-form-item__content{
+    width: 80%;
+  }
+
+ /* 商品添加页面 */
+ .product_add .el-input{
+   width: 95%;
+ }
+
+/* 商品统计页面 */
+.stock_statistics p{
+  margin: 10px 400px 0px 470px;
+ 
+}
+
+
+ /* 清除浮动 */
+ .clearfix:after{
+  content:"";        
+  display:block;        
+  height:0;        
+  clear:both;        
+  visibility:hidden;        
+  line-height: 0;
+}

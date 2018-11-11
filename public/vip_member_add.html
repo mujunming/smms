@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>超市管理系统-会员管理添加账号</title>
+	<!-- 引入重置样式 -->
+	<link rel="stylesheet" href="./styles/reset.css">
+	<!-- 引入elementUI.css -->
+	<link rel="stylesheet" href="./styles/elementui.css">
+	<!-- 引入首页自定义css -->
+	<link rel="stylesheet" href="./styles/index.css">
+	<!-- 使用script标签发起同步请求 -->
+    <script src="/users/checkState"></script>
+</head>
+
+<body>
+	<div id="app">
+		<el-main>
+			<el-card class="box-card">
+				<div slot="header" class="clearfix">
+					<span>添加编辑账号</span>
+				</div>
+				<div class="text item">
+					<el-form :label-position="labelPosition" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2"
+					 label-width="100px" class="demo-ruleForm">
+						<!--真实名字-->
+						<el-form-item label="真实名字" prop="realName">
+							<el-input v-model.number="ruleForm2.realName"></el-input>
+						</el-form-item>
+						<!--会员卡卡号-->
+						<el-form-item label="会员卡卡号" prop="clubCardNum">
+							<el-input type="text" v-model="ruleForm2.clubCardNum" autocomplete="off"></el-input>
+						</el-form-item>
+					</el-form>
+					<el-form :label-position="labelPosition1" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2"
+					 label-width="100px" class="demo-ruleForm">
+						<!--用户组-->
+						<el-form-item label="用户组" prop='region'>
+							<el-select v-model="ruleForm2.region" placeholder="请选择组别">
+								<el-option label="普通会员-99%" value="普通会员"></el-option>
+								<el-option label="塑料会员-90%" value="塑料会员"></el-option>
+								<el-option label="钢铁会员-80%" value="钢铁会员"></el-option>
+							</el-select>
+						</el-form-item>
+						<!--身份证-->
+						<el-form-item label="身份证" prop="idCard">
+							<el-input v-model.number="ruleForm2.idCard"></el-input>
+						</el-form-item>
+						<!--用户状态-->
+						<el-form-item label="用户状态" prop="userSate">
+							<el-radio-group v-model="ruleForm2.userSate">
+								<el-radio label="启用"></el-radio>
+								<el-radio label="禁用"></el-radio>
+							</el-radio-group>
+						</el-form-item>
+						<!--手机号码-->
+						<el-form-item label="手机号码" prop="tel">
+							<el-input v-model.number="ruleForm2.tel"></el-input>
+						</el-form-item>
+						<!--座机号码-->
+						<el-form-item label="座机号码" prop="lindlinNum">
+							<el-input v-model.number="ruleForm2.lindlinNum"></el-input>
+						</el-form-item>
+						<!--邮箱地址-->
+						<el-form-item prop="email" label="邮箱地址">
+							<el-input v-model="ruleForm2.email"></el-input>
+						</el-form-item>
+						<!--地区选择-->
+						<el-form-item prop="areaSelect" label="地区选择">
+							<el-cascader :options="options2" @active-item-change="handleItemChange" :props="props">
+							</el-cascader>
+						</el-form-item>
+						<!--详细地址-->
+						<el-form-item label="详细地址" prop="address">
+							<el-input v-model="ruleForm2.address"></el-input>
+						</el-form-item>
+						<!--邮政编码-->
+						<el-form-item label="邮政编码" prop="postalCode">
+							<el-input v-model.number="ruleForm2.postalCode"></el-input>
+						</el-form-item>
+						<!--下方按钮-->
+						<el-form-item>
+							<el-button type="primary" @click="submitForm('ruleForm2')">添加</el-button>
+						</el-form-item>
+					</el-form>
+				</div>
+			</el-card>
+		</el-main>
+	</div>
+	<!-- 引入jquery -->
+	<script src="./javascripts/jquery.min.js"></script>
+	<!-- 引入vue -->
+	<script src="./javascripts/vue.min.js"></script>
+	<!-- 引入element.js -->
+	<script src="./javascripts/elementui.js"></script>
+	<script>
+		new Vue({
+			el: "#app",
+			data() {
+				//验证方法，验证两次密码是否一致
+				var validatePass2 = (rule, value, callback) => {
+					//如果密码错误。抛出错误
+					if (value !== this.ruleForm2.pass) {
+						callback(new Error('两次输入密码不一致!'));
+					} else {
+						callback();
+					}
+				};
+				return {
+					//输入前的字显示位置
+					labelPosition: 'top',
+					labelPosition1: 'left',
+					//地区选择级联
+					options2: [{
+							label: '江苏',
+							cities: []
+						},
+						{
+							label: '浙江',
+							cities: []
+						},
+						{
+							label: '四川',
+							cities: []
+						}
+					],
+					props: {
+						value: 'label',
+						children: 'cities'
+					},
+					//表单中的值
+					ruleForm2: {
+						clubCardNum: '', //会员卡卡号
+						realName: '', //真实姓名
+						region: '', //组别
+						idCard: '', //身份证
+						userSate: '', //用户状态
+						tel: '', //手机号码
+						lindlinNum: '', //座机号码
+						email: '', //邮箱  
+						areaSelect: '', //地区选择
+						address: '', //活动名称
+						postalCode : '' //邮政编码
+					},
+					//验证规则
+					rules2: {
+						clubCardNum: [{
+								required: true,
+								message: "会员卡卡号不能为空",
+								trigger: "blur"
+							},
+							{
+								min: 6,
+								max: 18,
+								message: "密码长度为5-18位",
+								trigger: "blur"
+							}
+						],
+						checkPass: [{
+								validator: validatePass2,
+								trigger: 'blur'
+							},
+							{
+								required: true,
+								message: "密码不能为空",
+								trigger: "blur"
+							},
+							{
+								min: 6,
+								max: 18,
+								message: "密码长度为5-18位",
+								trigger: "blur"
+							}
+						],
+						realName: [{
+								required: true,
+								message: "用户名不能为空",
+								trigger: "blur"
+							},
+							{
+								min: 5,
+								max: 12,
+								message: "用户名长度为5-12位",
+								trigger: "blur"
+							}
+						],
+						region: [{
+							required: true,
+							message: "组别不能为空",
+							trigger: "change"
+						}],
+						idCard: [{
+								required: true,
+								message: "身份证号不能为空",
+								trigger: "blur"
+							},
+							{
+								min: 18,
+								max: 18,
+								message: "身份证号位数不正确",
+								trigger: "blur"
+							},
+							{
+								type: 'number',
+								message: '身份证必须为数字'
+							}
+						],
+						tel: [{
+								min: 11,
+								max: 11,
+								message: "手机号位数不正确",
+								trigger: "blur"
+							},
+							{
+								type: 'number',
+								message: '手机号必须为数字'
+							},
+							{
+								required: false,
+								message: "手机号不能为空",
+								trigger: "change"
+							},
+						],
+						lindlinNum: [{
+								min: 11,
+								max: 11,
+								message: "座机号位数不正确",
+								trigger: "blur"
+							},
+							{
+								type: 'number',
+								message: '座机号必须为数字'
+							},
+							{
+								required: false,
+								message: "座机号不能为空",
+								trigger: "change"
+							},
+						],
+						email: [{
+								required: true,
+								message: '请输入邮箱地址',
+								trigger: 'blur'
+							},
+							{
+								type: 'email',
+								message: '请输入正确的邮箱地址',
+								trigger: ['blur', 'blur']
+							}
+						],
+						address: [{
+								required: true,
+								message: '请输入详细地址',
+								trigger: 'blur'
+							}
+						],
+						postalCode: [{
+								required: true,
+								message: "邮政编码不能为空",
+								trigger: "blur"
+							},
+							{
+								min: 6,
+								max: 6,
+								message: "邮政编码位数不正确",
+								trigger: "blur"
+							},
+							{
+								type: 'number',
+								message: '邮政编码必须为数字'
+							}
+						],
+					}
+				};
+			},
+			methods: {
+				//提交表单
+				submitForm(formName) {
+					this.$refs[formName].validate((valid) => {
+						if (valid) {
+							//向后端发起ajax请求
+							$.post('/users/add', this.ruleForm2, (result) => {
+								console.log(result)
+							})
+						} else {
+							console.log('error submit!!');
+							return false;
+						}
+					});
+				},
+				resetForm(formName) {
+					this.$refs[formName].resetFields();
+				},
+				handleItemChange(val) {
+					console.log('active item:', val);
+					setTimeout(_ => {
+						if (val.indexOf('江苏') > -1 && !this.options2[0].cities.length) {
+							this.options2[0].cities = [{
+								label: '南京'
+							}];
+						} else if (val.indexOf('浙江') > -1 && !this.options2[1].cities.length) {
+							this.options2[1].cities = [{
+								label: '杭州'
+							}];
+						} else if (val.indexOf('四川') > -1 && !this.options2[2].cities.length) {
+							this.options2[2].cities = [{
+								label: '成都'
+							}];
+						}
+					}, 300);
+
+				}
+			}
+		})
+	</script>
+</body>
+
+</html>

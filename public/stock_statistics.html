@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统-进货统计</title>
+    <!-- 引入重置样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUI.css -->
+    <link rel="stylesheet" href="./styles/elementui.css">
+    <!-- 引入首页自定义css -->
+    <link rel="stylesheet" href="./styles/index.css">
+    <!-- 使用script标签发起同步请求 -->
+    <script src="/users/checkState"></script>
+</head>
+
+<body>
+    <div id="app" class="stock_statistics">
+        <el-main>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>进货统计</span>
+                </div>
+                <div class="text item">
+                    <div class="block">
+                        <span class="demonstration">时间：</span>
+                        <el-date-picker v-model="value7" type="daterange" align="right" unlink-panels range-separator="至"
+                            start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2">
+                        </el-date-picker>
+                        <el-button type="success" plain>查询</el-button>
+                    </div>        
+                    <p>进货统计</p>           
+                    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                    <div id="main" style="width: 100%;height:400px;"></div>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+    <!-- 引入jquery -->
+    <script src="./javascripts/jquery.min.js"></script>
+    <!-- 引入vue -->
+    <script src="./javascripts/vue.min.js"></script>
+    <!-- 引入element.js -->
+    <script src="./javascripts/elementui.js"></script>
+    <!-- 引入echarts -->
+    <script src="./javascripts/echarts.min.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    pickerOptions2: {
+                        shortcuts: [{
+                            text: '最近一周',
+                            onClick(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                                picker.$emit('pick', [start, end]);
+                            }
+                        }, {
+                            text: '最近一个月',
+                            onClick(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                                picker.$emit('pick', [start, end]);
+                            }
+                        }, {
+                            text: '最近三个月',
+                            onClick(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                                picker.$emit('pick', [start, end]);
+                            }
+                        }]
+                    },
+                    value6: '',
+                    value7: ''
+                };
+            },
+            methods: {
+
+            }
+        })
+    </script>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            xAxis: {
+                type: 'category',
+                data: ['12-02-5', '12-02-5', '12-02-5', '12-02-6', '12-02-6', '12-02-6', '12-02-7','12-02-7','12-02-7',
+                '12-02-8','12-02-8','12-02-8','12-02-9',
+                ]
+            },
+            yAxis: {
+                type:'value'
+            },
+            series: [{
+                data: [320, 280, 240, 180, 120, 60, 130,190,270,310,400,440,507],
+                type: 'line'
+            }]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+</body>
+
+</html>

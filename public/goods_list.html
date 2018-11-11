@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统-商品管理</title>
+    <!-- 引入重置样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUI.css -->
+    <link rel="stylesheet" href="./styles/elementui.css">
+    <!-- 引入首页自定义css -->
+    <link rel="stylesheet" href="./styles/index.css">
+    <!-- 使用script标签发起同步请求 -->
+    <script src="/users/checkState"></script>
+</head>
+
+<body>
+    <div id="app" class="product_list">
+        <el-main>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>商品管理</span>
+                </div>
+                <div class="text item">
+                    <el-form label-width="80px" :model="searchInput" class="clearfix">
+                        <!--用户分类-->
+                        <el-form-item label="" prop='region'>
+                            <el-select v-model="searchInput.region" placeholder="请选择分类">
+                                <el-option label="---顶级分类---" value="---顶级分类---"></el-option>
+                                <el-option label="---一般分类---" value="---一般分类---"></el-option>
+                                <el-option label="---普通分类---" value="---普通分类---"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="关键字：" class="keyWords">
+                            <el-input v-model="searchInput.search"></el-input>
+                            （商品名称，条形码）
+                            <el-button type="success">查询</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <template>
+                        <el-table :data="tableData3" style="width: 100%">
+                            <el-table-column prop="barCode" label="商品条形码" width="130">
+                            </el-table-column>
+                            <el-table-column prop="name" label="商品名称" width="150">
+                            </el-table-column>
+                            <el-table-column prop="proRegion" label="所属分类" width='80'>
+                            </el-table-column>
+                            <el-table-column prop="sellPrice" label="售价（元）" width='100'>
+                            </el-table-column>
+                            <el-table-column prop="promotionPrice" label="促销价（元）" width='120'>
+                            </el-table-column>
+                            <el-table-column prop="marketPrice" label="市场价（元）" width='120'>
+                            </el-table-column>
+                            <el-table-column prop="repertory" label="库存" width='80'>
+                            </el-table-column>
+                            <el-table-column prop="inventoryTota" label="库存总额（元）" width='140'>
+                            </el-table-column>
+                            <el-table-column prop="grossSales" label="销售总额（元）" width='140'>
+                            </el-table-column>
+                            <el-table-column label="管理">
+                                <template slot-scope="scope">
+                                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" type="primary"
+                                        plain><i class="el-icon-edit"></i>编辑</el-button>
+                                    <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" type="danger"
+                                        plain><i class="el-icon-delete"></i>删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                    <!-- 翻页 -->
+                    <div class="block">
+                        <el-pagination layout="prev, pager, next" :total="50">
+                        </el-pagination>
+                    </div>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+    <!-- 引入jquery -->
+    <script src="./javascripts/jquery.min.js"></script>
+    <!-- 引入vue -->
+    <script src="./javascripts/vue.min.js"></script>
+    <!-- 引入element.js -->
+    <script src="./javascripts/elementui.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    searchInput: {
+                        search: '', //搜索
+                        region: '', //分类
+                        barCode: '', //条形码
+                        proRegion: '', //所属分类
+                        sellPrice: '', //售价
+                        promotionPrice: '', //促销价
+                        marketPrice: '', // 市场价
+                        repertory: '', // 库存      
+                        inventoryTota: '', // 库存总额  
+                        grossSales: '' //销售总额
+                    },
+                    tableData3: [{
+                            barCode: '6911393843949',
+                            name: '海飞丝去屑洗发水',
+                            proRegion: '优乐美',
+                            sellPrice: '2.00',
+                            promotionPrice: '未促销',
+                            marketPrice: '2.88',
+                            repertory: '5',
+                            inventoryTota: '10.00',
+                            grossSales: '40.00'
+                        },
+                        {
+                            barCode: '6911393843950',
+                            name: '霸王脱发剂',
+                            proRegion: '是你的益达',
+                            sellPrice: '12.00',
+                            promotionPrice: '大促销',
+                            marketPrice: '2.88',
+                            repertory: '5',
+                            inventoryTota: '10.00',
+                            grossSales: '40.00'
+                        },
+                    ]
+                }
+            },
+            methods: {
+                handleEdit(index, row) {
+                    console.log(index, row);
+                },
+                handleDelete(index, row) {
+                    console.log(index, row);
+                }
+
+            }
+        })
+    </script>
+</body>
+
+</html>

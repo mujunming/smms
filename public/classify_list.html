@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>超市管理系统-分类管理</title>
+	<!-- 引入重置样式 -->
+	<link rel="stylesheet" href="./styles/reset.css">
+	<!-- 引入elementUI.css -->
+	<link rel="stylesheet" href="./styles/elementui.css">
+	<!-- 引入首页自定义css -->
+	<link rel="stylesheet" href="./styles/index.css">
+	 <!-- 使用script标签发起同步请求 -->
+	 <script src="/users/checkState"></script>
+</head>
+
+<body>
+	<div id="app">
+		<el-main>
+			<el-card class="box-card">
+				<div slot="header" class="clearfix">
+					<span>分类管理</span>
+				</div>
+				<div class="text item">
+					<template>
+						<el-table :data="tableData" stripe style="width: 100%">
+							<el-table-column label="编号" prop="cg_id">
+                            </el-table-column>
+                            <el-table-column label="名称" prop="cg_name">
+                            </el-table-column>
+                            <el-table-column label="父级分类">
+                                <template slot-scope="scope">
+                                    <span> {{ scope.row.cg_fatherID }}</span>
+                                </template>
+                            </el-table-column>
+							<el-table-column label="管理">
+                                <template slot-scope="scope">
+                                    <el-button size="mini" @click="handleEdit(scope.row.cg_id)" type="primary" plain><i
+                                            class="el-icon-edit"></i>编辑</el-button>
+                                    <el-button size="mini" @click="handleDelete(scope.row.cg_id)" type="danger" plain><i
+                                            class="el-icon-delete"></i>删除</el-button>
+                                </template>
+                            </el-table-column>
+						</el-table>
+					</template>
+				</div>
+			</el-card>
+		</el-main>
+	</div>
+	<!-- 引入jquery -->
+	<script src="./javascripts/jquery.min.js"></script>
+	<!-- 引入vue -->
+	<script src="./javascripts/vue.min.js"></script>
+	<!-- 引入element.js -->
+	<script src="./javascripts/elementui.js"></script>
+	<script>
+		new Vue({
+			el: "#app",
+			data() {
+
+				return {
+					tableData: [
+							
+					]
+				};
+			},
+			methods: {
+                //编辑的方法
+                handleEdit(cg_id) {
+                    //拿到要修改的数据的id，然后发送并跳转到修改页面
+					location.href = "classify_edit.html?cg_id="+cg_id;
+                },
+                // 删除的方法
+                handleDelete(cg_id) {
+                    if(confirm('确定要删除吗')){
+                        $.get("/category/del", {cg_id}, (result) => {
+                            if (result.isOk) {
+                                alert(result.msg)
+                                this.getDataAjax();
+                            } else {
+                                alert(result.msg);
+                            }
+                        })
+                    }    
+                },
+                //将发ajax请求数据的方法抽出来，封装成一个函数
+                getDataAjax() {
+                    $.get("category/list", (dataList) => {
+                        this.tableData = dataList;
+                    })
+                },
+            },
+            mounted() {
+                //发起ajax到后端请求数据
+                this.getDataAjax();
+            }
+		})
+	</script>
+</body>
+
+</html>

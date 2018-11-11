@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统-账号管理</title>
+    <!-- 引入重置样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUI.css -->
+    <link rel="stylesheet" href="./styles/elementui.css">
+    <!-- 引入首页自定义css -->
+    <link rel="stylesheet" href="./styles/index.css">
+     <!-- 使用script标签发起同步请求 -->
+     <script src="/users/checkState"></script>
+</head>
+
+<body>
+    <div id="app">
+        <el-main>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>账号管理</span>
+                </div>
+                <div class="text item">
+                    <template>
+                        <el-table :data="tableData" style="width: 100%">
+                            <el-table-column label="编号">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.u_id }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="用户姓名">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.userName }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="用户组">
+                                <template slot-scope="scope">
+                                    <span style="margin-left: 10px">{{ scope.row.userGroup }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="日期" prop="createDatetime" :formatter="dateFormat">
+                            </el-table-column>
+                            <el-table-column label="管理">
+                                <template slot-scope="scope">
+                                    <el-button size="mini" @click="handleEdit(scope.row.u_id)" type="primary" plain><i
+                                            class="el-icon-edit"></i>编辑</el-button>
+                                    <el-button size="mini" @click="handleDelete(scope.row.u_id)" type="danger" plain><i
+                                            class="el-icon-delete"></i>删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+    <!-- 引入jquery -->
+    <script src="./javascripts/jquery.min.js"></script>
+    <!-- 引入vue -->
+    <script src="./javascripts/vue.min.js"></script>
+    <!-- 引入moment.js -->
+    <script src="./javascripts/moment-with-locales.min.js"></script>
+    <!-- 引入element.js -->
+    <script src="./javascripts/elementui.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    tableData: [
+
+                    ]
+                }
+            },
+            methods: {
+                //编辑的方法
+                handleEdit(id) {
+                    //拿到要修改的数据的id，然后发送并跳转到修改页面
+                    location.href="member_edit.html?id="+id;
+                },
+                // 删除的方法
+                handleDelete(id) {
+                    if(confirm('确定要删除吗')){
+                        $.get("/users/del", {id}, (result) => {
+                            if (result.isOk) {
+                                alert(result.msg)
+                                this.getDataAjax();
+                            } else {
+                                alert(result.msg);
+                            }
+                        })
+                    }    
+                },
+                //将发ajax请求数据的方法抽出来，封装成一个函数
+                getDataAjax() {
+                    $.get("users/list", (userList) => {
+                        this.tableData = userList;
+                    })
+                },
+                //格式化时间的方法
+                dateFormat(row, column) {
+                    var date = row[column.property];
+                    if (date == undefined) {
+                        return ""
+                    }
+                    return moment(date).format("YYYY-MM-DD")
+                }
+            },
+            mounted() {
+                //发起ajax到后端请求数据
+                this.getDataAjax();
+            }
+        })
+    </script>
+</body>
+
+</html>

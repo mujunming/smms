@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>超市管理系统-修改分类</title>
+	<!-- 引入重置样式 -->
+	<link rel="stylesheet" href="./styles/reset.css">
+	<!-- 引入elementUI.css -->
+	<link rel="stylesheet" href="./styles/elementui.css">
+	<!-- 引入首页自定义css -->
+	<link rel="stylesheet" href="./styles/index.css">
+	 <!-- 使用script标签发起同步请求 -->
+	 <script src="/users/checkState"></script>
+</head>
+
+<body>
+	<div id="app">
+		<el-main>
+			<el-card class="box-card">
+				<div slot="header" class="clearfix">
+					<span>添加分类</span>
+				</div>
+				<div class="text item">
+					<el-form :label-position="labelPosition" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2"
+					 label-width="100px" class="demo-ruleForm">
+						<!--用户分类-->
+						<el-form-item label="所属分类" prop='cg_fatherID'>
+							<el-select v-model="ruleForm2.cg_fatherID" placeholder="请选择分类">
+								<el-option label="---顶级分类---" value="---顶级分类---"></el-option>
+								<!-- 将从后端请求回来的数据循环出来，然后放到下拉列表中 -->
+								<!-- <el-option v-for="(c, index) in categoryList" :key="index" :label="c.cg_name" :value="c.cg_id"></el-option> -->
+							</el-select>
+						</el-form-item>
+						<!--分类名称-->
+						<el-form-item label="分类名称" prop="cg_name">
+							<el-input v-model.number="ruleForm2.cg_name"></el-input>
+						</el-form-item>
+						<!--状态-->
+						<el-form-item label="状态" prop="cg_isLocked">
+							<el-radio-group v-model="ruleForm2.cg_isLocked">
+								<el-radio label="1" value="1">启用</el-radio>
+								<el-radio label="0" value="0">禁用</el-radio>
+							</el-radio-group>
+						</el-form-item>
+						<!--下方按钮-->
+						<el-form-item>
+							<el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
+						</el-form-item>
+					</el-form>
+					
+				</div>
+			</el-card>
+		</el-main>
+	</div>
+	<!-- 引入jquery -->
+	<script src="./javascripts/jquery.min.js"></script>
+	<!-- 引入vue -->
+	<script src="./javascripts/vue.min.js"></script>
+	<!-- 引入element.js -->
+	<script src="./javascripts/elementui.js"></script>
+	<script>
+		new Vue({
+			el: "#app",
+			data() {
+				
+				return {
+					//输入前的字显示位置
+					labelPosition: 'top',					
+					//表单中的值
+					ruleForm2: {
+						cg_fatherID : "",
+						cg_name : "",
+                        cg_isLocked : "1",
+                        cg_id:''
+					},
+					//验证规则
+					rules2: {					
+						regionName: [{
+								required: true,
+								message: "分类名不能为空",
+								trigger: "blur"
+							},
+							{
+								min: 5,
+								max: 12,
+								message: "分类名长度为4-12位",
+								trigger: "blur"
+							}
+						],
+						region: [{
+							required: true,
+							message: "组别不能为空",
+							trigger: "change"
+						}],
+					}
+				};
+			},
+			//视图个挂载完毕后的函数
+			mounted() {
+                //获取要修改的数据的id
+                let reqUrl = location.href;
+                let cg_id = reqUrl.split("=")[1];
+                //根据id去后台请求原来的旧数据
+				$.get("/category/getListByid",{cg_id},(dataList) => {
+                    let data = dataList[0];
+                    this.ruleForm2.cg_fatherID = data.cg_fatherID;
+                    this.ruleForm2.cg_name = data.cg_name;
+                    this.ruleForm2.cg_isLocked = data.cg_isLocked;
+                    this.ruleForm2.cg_id = data.cg_id;  //把要修改的数据的id也保存到模型中
+				})
+			},
+			methods: {
+				//修改完成后提交表单
+				submitForm(formName) {
+					this.$refs[formName].validate((valid) => {
+						if (valid) {
+							//向后端发起ajax请求
+							$.post('/category/save', this.ruleForm2, (result) => {
+								if(result.isOk){
+									alert(result.message)		
+									location.href = "classify_list.html"	
+								}else{
+									alert(result.message)
+								}
+							})
+							
+						} else {
+							return false;
+						}
+					});
+				}
+            },
+            
+		})
+	</script>
+</body>
+
+</html>

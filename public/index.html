@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统-首页</title>
+    <!-- 引入重置样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUI.css -->
+    <link rel="stylesheet" href="./styles/elementui.css">
+    <!-- 引入首页自定义css -->
+    <link rel="stylesheet" href="./styles/index.css">
+    <!-- 使用script标签发起同步请求 -->
+    <script src="/users/checkState"></script>
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+            <!-- 左侧导航栏 -->
+            <el-aside width="200px">
+                <!-- 左侧导航栏顶部菜单 -->
+                <div id="leftNavTop">
+                    <h1>华联超市管理系统</h1>
+                    <p>您好，admin</p>
+                    <p><a href="#">管理系统</a> | <a href="/users/signOut">退出首页</a></p>
+                </div>
+                <el-menu unique-opened default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+                    <!-- 分类管理 -->
+                    <el-submenu index="1">
+                        <template slot="title">
+                            <span>分类管理</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item index="1-1"><a href="classify_list.html" target="mainContent">分类管理</a></el-menu-item>
+                            <el-menu-item index="1-2"><a href="classify_add.html" target="mainContent">添加分类</a></el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                    <!-- 商品管理 -->
+                    <el-submenu index="2">
+                        <template slot="title">
+                            <span>商品管理</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item index="2-1"><a href="goods_list.html" target="mainContent">商品管理</a></el-menu-item>
+                            <el-menu-item index="2-2"><a href="goods_add.html" target="mainContent">添加商品</a></el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                    <!-- 统计管理 -->
+                    <el-submenu index="3">
+                        <template slot="title">
+                            <span>统计管理</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item index="3-1"><a href="stock_statistics.html" target="mainContent">统计管理</a></el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                    <!-- 账号管理 -->
+                    <el-submenu index="4">
+                        <template slot="title">
+                            <span>账号管理</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item index="4-1"><a href="member_list.html" target="mainContent">账号管理</a></el-menu-item>
+                            <el-menu-item index="4-2"><a href="member_add.html" target="mainContent">添加账号</a></el-menu-item>
+                            <el-menu-item index="4-3"><a href="#">账号修改</a></el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                    <!-- 会员管理 -->
+                    <el-submenu index="5">
+                        <template slot="title">
+                            <span>会员管理</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item index="5-1"><a href="vip_member_list.html" target="mainContent">账号管理</a></el-menu-item>
+                            <el-menu-item index="5-2"><a href="vip_member_add.html" target="mainContent">添加账号</a></el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                    <!-- 账号管理 -->
+                    <el-submenu index="6">
+                        <template slot="title">
+                            <span>系统管理</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item index="6-1"><a href="#">系统信息</a></el-menu-item>
+                            <el-menu-item index="6-2"><a href="#">系统配置</a></el-menu-item>
+                            <el-menu-item index="6-3"><a href="#">权限管理</a></el-menu-item>
+                            <el-menu-item index="6-4"><a href="#">添加管理组</a></el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                </el-menu>
+            </el-aside>
+            <el-container>
+                <!-- 右侧头部 -->
+                <el-header style="height:80px">
+                    <h2>欢迎您 admin</h2>
+                    <p>查看详细的系统信息</p>
+                </el-header>
+                <!-- 右侧主体内容开始 -->
+                <iframe src="main.html" name="mainContent" frameborder="0" scrolling='auto' width="100%" height="100%"></iframe>
+                <!-- 右侧主体内容结束 -->
+                <!-- 右侧尾部 -->
+                <el-footer>
+                    <p>&copy; copyright2018 华联超市管理系统</p>
+                </el-footer>
+            </el-container>
+        </el-container>
+    </div>
+    <!-- 引入jquery -->
+    <script src="./javascripts/jquery.min.js"></script>
+    <!-- 引入vue -->
+    <script src="./javascripts/vue.min.js"></script>
+    <!-- 引入element.js -->
+    <script src="./javascripts/elementui.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    
+                }
+            },
+            methods: {
+                handleOpen(key, keyPath) {
+                    //console.log(key, keyPath);
+                },
+                handleClose(key, keyPath) {
+                    //console.log(key, keyPath);
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

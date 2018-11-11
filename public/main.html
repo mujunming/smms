@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统-首页</title>
+    <!-- 引入重置样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUI.css -->
+    <link rel="stylesheet" href="./styles/elementui.css">
+    <!-- 引入首页自定义css -->
+    <link rel="stylesheet" href="./styles/index.css">
+     <!-- 使用script标签发起同步请求 -->
+     <script src="/users/checkState"></script>
+</head>
+
+<body>
+    <div id="app">
+        <el-main>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>系统信息</span>
+                </div>
+                <div class="text item">
+                    <!-- 商品总数提示框 -->
+                    <el-alert title="商品总数" type="blue" class="infoTop" show-icon>
+                    </el-alert>
+                    <el-alert title="导入数据" type="success" class="infoBtm" :closable="false">
+                    </el-alert>
+                    <!-- 下方左右布局 -->
+                    <el-row :gutter="36">
+                        <!-- 商品信息左边内容 -->
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple">
+                                <el-card class="box-card">
+                                    <div slot="header" class="clearfix">
+                                        <span>销售排行</span>
+                                    </div>
+                                    <div class="text item">
+                                        <template>
+                                            <el-table :data="tableData1" stripe style="width: 100%">
+                                                <el-table-column prop="porName" label="商品名称" width="380">
+                                                </el-table-column>
+                                                <el-table-column prop="proNum" label="销量" width="170">
+                                                </el-table-column>
+                                            </el-table>
+                                        </template>
+                                    </div>
+                                </el-card>
+                            </div>
+                        </el-col>
+                        <!-- 商品信息右边内容 -->
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple-light">
+                                <el-card class="box-card">
+                                    <div slot="header" class="clearfix">
+                                        <span>缺货的商品</span>
+                                    </div>
+                                    <div class="text item">
+                                        <template>
+                                            <el-table :data="tableData2" stripe style="width: 100%">
+                                                <el-table-column prop="porName" label="商品名称" width="280">
+                                                </el-table-column>
+                                                <el-table-column prop="stock" label="库存" width="180">
+                                                </el-table-column>
+                                                <el-table-column prop="operation" label="操作">
+                                                </el-table-column>
+                                            </el-table>
+                                        </template>
+                                    </div>
+                                </el-card>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+    <!-- 引入jquery -->
+    <script src="./javascripts/jquery.min.js"></script>
+    <!-- 引入vue -->
+    <script src="./javascripts/vue.min.js"></script>
+    <!-- 引入element.js -->
+    <script src="./javascripts/elementui.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    tableData1: [{
+                        porName: '海飞丝去屑洗发水',
+                        proNum: '8'
+                    }, {
+                        porName: '海飞丝去屑洗发水',
+                        proNum: '8'
+                    }, {
+                        porName: '龙凤呈祥',
+                        proNum: '5'
+                    }, {
+                        porName: '海飞丝去屑洗发水',
+                        proNum: '8'
+                    }],
+                    tableData2: [{
+                        porName: '我的优乐美',
+                        stock: 0,
+                        operation: '入库'
+                    }]
+                }
+            },
+            methods: {
+               
+            }
+        })
+    </script>
+</body>
+
+</html>

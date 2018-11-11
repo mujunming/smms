@@ -1,0 +1,45 @@
+body{
+    /* background-color: rgb(181, 232, 245); */
+    background: url(../images/003.png)no-repeat;
+    background-size: 100%;
+}
+.text {
+    font-size: 14px;
+  }
+
+  .item {
+    margin-bottom: 18px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+  .box-card {
+    width: 480px;
+    height: 300px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background-color: rgb(250, 252, 231);
+  }
+
+  .box-card h2 span{
+    margin-right: 20px;
+  }
+
+  .el-card__header{
+      padding: 0 20px;
+  }
+
+  .el-card__body{
+      padding-right: 70px;
+  }

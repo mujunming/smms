@@ -28,23 +28,26 @@
                         label-width="100px" class="demo-ruleForm">
                         <el-form-item label="所属分类：" prop="cg_id">
                             <el-select v-model="ruleForm.cg_id" placeholder="选择分类">
-                                <el-option label="飞机" value="飞机"></el-option>
-                                <el-option label="大炮" value="大炮"></el-option>
+                                <el-option v-for="(c, index) in categoryList" :key="index" :label="c.cg_name" :value="c.cg_id"></el-option>
                             </el-select>
+                        </el-form-item>
+                        <el-form-item label="商品条形码：" prop="barcode">
+                            <el-input v-model="ruleForm.barcode"></el-input>
                         </el-form-item>
                         <el-form-item label="商品名称：" prop="goodsname">
                             <el-input v-model="ruleForm.goodsname"></el-input>
                         </el-form-item>
-                        <el-form-item label="商品售价：" prop="goodsprice">
-                            <el-input v-model="ruleForm.goodsprice"></el-input>元
+                        <el-form-item label="商品进价：" prop="goodsprice">
+                            <el-input v-model.number="ruleForm.goodsprice" @blur="autoFillPrice()"></el-input>元
                         </el-form-item>
-                        <el-form-item label="市场价：" prop="marketPrice">
-                            <el-input v-model="ruleForm.marketPrice"></el-input>元
-                            <p>默认市场为售价的1.2倍</p>
-                        </el-form-item>
-                        <el-form-item label="商品进价：" prop="saleprice">
+                        <el-form-item label="商品售价：" prop="saleprice">
                             <el-input v-model="ruleForm.saleprice"></el-input>元
                         </el-form-item>
+                        <el-form-item label="市场价：" prop="marketprice">
+                            <el-input v-model.number="ruleForm.marketprice"></el-input>元
+                            <p>默认市场价为售价的1.2倍</p>
+                        </el-form-item>
+                        
                         <el-form-item label="入库数量：" prop="stockNum">
                             <el-input v-model="ruleForm.stockNum"></el-input>
                         </el-form-item>
@@ -67,7 +70,7 @@
                             </el-radio-group>
                         </el-form-item>
                         <el-form-item label="商品简介：" prop="goodsDetails">
-                            <el-input type="textarea" v-model="ruleForm.goodsDetails"></el-input>
+                            <el-input type="textarea" rows='5' v-model="ruleForm.goodsDetails"></el-input>
                             不超过200个汉字
                         </el-form-item>
                         <el-form-item>
@@ -94,8 +97,8 @@
                         cg_id:'',   //分类名称的id
                         barcode:'', //条码
                         goodsname:'', //商品名称
-                        goodsprice:'',  //商品进价
-                        marketPrice:0, //市场价
+                        goodsprice:0,  //商品进价
+                        marketprice:0, //市场价
                         saleprice:0,    //销售价
                         stockNum:0,  //库存数量 
                         weigth:0,     //重量
@@ -104,16 +107,17 @@
                         discount:'',    //优惠折扣
                         goodsDetails:''  //商品详情
                     },
+                    categoryList:[], //下拉列表的数据源
                     rules: {
                         goodsname: [{
                                 required: true,
                                 message: '请输入商品名称',
                                 trigger: 'blur'
                             },
-                            {
-                                min: 5,
-                                max: 12,
-                                message: '长度在 5 到 12 个字符',
+                        ],
+                        barcode: [{
+                                required: true,
+                                message: '请输入商品条形码',
                                 trigger: 'blur'
                             }
                         ],
@@ -127,27 +131,62 @@
                                 required: true,
                                 message: '商品售价不能为空',
                                 trigger: 'blur'
-                            },
-                            {
-                                type: 'number',
-                                message: '商品售价必须为数字',
-                                trigger: 'blur'
-                            }  
+                            }
                         ]
                     }
                 };
+            },
+            created() {
+                this.ruleForm.barcode=new Date().getTime();
+            },
+            mounted() {
+                $.get("/category/list",(dataList)=> {
+                    //把ajax请求获取的分类修改到模型上面
+                    //console.log(dataList);
+                    this.categoryList=dataList;
+                });
             },
             methods: {
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            alert('submit!');
+                            //发送数据到后端
+                            //向后端发起ajax请求
+							$.post('/goods/add', this.ruleForm, (result) => {
+								if(result.isOk){
+									if(confirm('要继续添加吗?')){
+										location.reload();
+									}else{
+										location.href = "goods_list.html"
+									}
+								}else{
+									alert(result.message)
+								}
+							})
                         } else {
                             console.log('error submit!!');
                             return false;
                         }
                     });
+                },
+                //根据进阶自动计算销售价和市场价
+                autoFillPrice(){
+                    //商品进价goodsprice    marketprice市场价     saleprice销售价
+                    this.ruleForm.goodsprice=parseFloat(this.ruleForm.goodsprice).toFixed(2);
+                    this.ruleForm.saleprice=(this.ruleForm.goodsprice*2).toFixed(2);
+                    this.ruleForm.marketprice=(this.ruleForm.saleprice*1.2).toFixed(2);
+                    
                 }
+                // <el-form-item label="商品进价：" prop="goodsprice" @blur = "autoFillPrice()">
+                //     <el-input v-model.number="ruleForm.goodsprice"></el-input>元
+                // </el-form-item>
+                // <el-form-item label="商品售价：" prop="saleprice">
+                //     <el-input v-model="ruleForm.saleprice"></el-input>元
+                // </el-form-item>
+                // <el-form-item label="市场价：" prop="marketprice">
+                //     <el-input v-model.number="ruleForm.marketprice"></el-input>元
+                //     <p>默认市场价为售价的1.2倍</p>
+                // </el-form-item>
             }
         })
     </script>

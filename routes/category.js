@@ -26,7 +26,7 @@ router.post('/add', function(req, res) {
 // 获取商品分类列表的路由
 router.get('/list',(req,res) => {
   //构造sql语句，查询数据库中的数据并按id的顺序，倒序排列
-  let sqlStr = "select * from categoryGoods order by cg_id DESC";
+  let sqlStr = "SELECT t1.*,t2.cg_name as father_name FROM categorygoods as t1 LEFT JOIN categorygoods as t2 on t1.cg_fatherID=t2.cg_id;";
   //执行sql语句
   connection.query(sqlStr,(error,dataList) => {
     if(error) throw error;
@@ -56,7 +56,8 @@ router.get("/getListByid",(req,res) => {
   //接收商品分类的id
   let cg_id = req.query.cg_id
   //构造sql语句
-  let sqlStr = "select * from categorygoods where cg_id=?";
+  // let sqlStr = "select * from categorygoods where cg_id=?";
+  let sqlStr = "SELECT t1.*,t2.cg_name as father_name FROM categorygoods as t1 LEFT JOIN categorygoods as t2 on t1.cg_fatherID=t2.cg_id where t1.cg_id=?;";
   let sqlParams = [cg_id];
   //执行sql语句
   connection.query(sqlStr,sqlParams,(error,result) => {

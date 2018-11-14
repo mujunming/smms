@@ -24,54 +24,72 @@
                     <span>商品管理</span>
                 </div>
                 <div class="text item">
-                    <el-form label-width="80px" :model="searchInput" class="clearfix">
+                    <el-form label-width="80px" :model="search" class="clearfix">
                         <!--用户分类-->
                         <el-form-item label="" prop='region'>
-                            <el-select v-model="searchInput.region" placeholder="请选择分类">
-                                <el-option label="---顶级分类---" value="---顶级分类---"></el-option>
-                                <el-option label="---一般分类---" value="---一般分类---"></el-option>
-                                <el-option label="---普通分类---" value="---普通分类---"></el-option>
+                            <el-select v-model="search.category" placeholder="请选择分类">
+                                <el-option v-for="(c, index) in categoryList" :key="index" :label="c.cg_name" :value="c.cg_id"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="关键字：" class="keyWords">
-                            <el-input v-model="searchInput.search"></el-input>
+                        <el-form-item label="关键字：" class="keyWord">
+                            <el-input v-model="search.keywords" placeholder="条码或者商品名称"></el-input>
                             （商品名称，条形码）
-                            <el-button type="success">查询</el-button>
+                            <el-button type="success" @click="onSearch">查询</el-button>
                         </el-form-item>
                     </el-form>
                     <template>
-                        <el-table :data="tableData3" style="width: 100%">
-                            <el-table-column prop="barCode" label="商品条形码" width="130">
+                        <el-table :data="tableData" style="width: 100%">
+                            <el-table-column label="编号" width="80px">
+                                <template slot-scope="scope">
+                                    <span> {{ scope.row.good_id }}</span>
+                                </template>
                             </el-table-column>
-                            <el-table-column prop="name" label="商品名称" width="150">
+                            <el-table-column prop="barcode" label="商品条形码" width="130">
+                            </el-table-column>
+                            <el-table-column prop="goodsname" label="商品名称" width="200">
                             </el-table-column>
                             <el-table-column prop="proRegion" label="所属分类" width='80'>
+                                <template slot-scope="scope">
+                                    <span> {{ scope.row.cg_name }}</span>
+                                </template>
                             </el-table-column>
-                            <el-table-column prop="sellPrice" label="售价（元）" width='100'>
+                            <el-table-column prop="goodsprice" label="商品进价（元）" width='120'>
+                                <template slot-scope="scope">
+                                    <span class='red'> {{ scope.row.goodsprice | formatPrice }}</span>
+                                </template>
                             </el-table-column>
-                            <el-table-column prop="promotionPrice" label="促销价（元）" width='120'>
+                            <el-table-column prop="saleprice" label="促销价（元）" width='120'>
+                                <template slot-scope="scope">
+                                    <span class='red'> {{ scope.row.saleprice | formatPrice }}</span>
+                                </template>
                             </el-table-column>
-                            <el-table-column prop="marketPrice" label="市场价（元）" width='120'>
+                            <el-table-column prop="marketprice" label="市场价（元）" width='120'>
+                                <template slot-scope="scope">
+                                    <span class='red'> {{ scope.row.marketprice | formatPrice }}</span>
+                                </template>
                             </el-table-column>
-                            <el-table-column prop="repertory" label="库存" width='80'>
+                            <el-table-column prop="stockNum" label="库存" width='80'>
                             </el-table-column>
-                            <el-table-column prop="inventoryTota" label="库存总额（元）" width='140'>
+                            <el-table-column label="库存总额（元）" width='140'>
+                                <template slot-scope="scope">
+                                    <span class='red'> {{ scope.row.goodsprice * scope.row.stockNum |formatPrice }}</span>
+                                </template>
                             </el-table-column>
-                            <el-table-column prop="grossSales" label="销售总额（元）" width='140'>
-                            </el-table-column>
-                            <el-table-column label="管理">
+                            <el-table-column label="管理" width>='180'>
                                 <template slot-scope="scope">
                                     <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" type="primary"
-                                        plain><i class="el-icon-edit"></i>编辑</el-button>
+                                        plain><i class="el-icon-edit"></i></el-button>
                                     <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" type="danger"
-                                        plain><i class="el-icon-delete"></i>删除</el-button>
+                                        plain><i class="el-icon-delete"></i></el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
                     </template>
                     <!-- 翻页 -->
-                    <div class="block">
-                        <el-pagination layout="prev, pager, next" :total="50">
+                    <div class="text item">
+                        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background
+                            :current-page="currentPage" :page-sizes="[1, 2, 3, 4, 5, 10, 100, 200, 300, 400]"
+                            :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
                         </el-pagination>
                     </div>
                 </div>
@@ -89,50 +107,95 @@
             el: "#app",
             data() {
                 return {
-                    searchInput: {
-                        search: '', //搜索
-                        region: '', //分类
-                        barCode: '', //条形码
-                        proRegion: '', //所属分类
-                        sellPrice: '', //售价
-                        promotionPrice: '', //促销价
-                        marketPrice: '', // 市场价
-                        repertory: '', // 库存      
-                        inventoryTota: '', // 库存总额  
-                        grossSales: '' //销售总额
+                    categoryList: [],
+                    total: 52,
+                    currentPage: 1,
+                    pageSize: 5,
+                    search: {
+                        keywords: '',
+                        category: ''
                     },
-                    tableData3: [{
-                            barCode: '6911393843949',
-                            name: '海飞丝去屑洗发水',
-                            proRegion: '优乐美',
-                            sellPrice: '2.00',
-                            promotionPrice: '未促销',
-                            marketPrice: '2.88',
-                            repertory: '5',
-                            inventoryTota: '10.00',
-                            grossSales: '40.00'
-                        },
-                        {
-                            barCode: '6911393843950',
-                            name: '霸王脱发剂',
-                            proRegion: '是你的益达',
-                            sellPrice: '12.00',
-                            promotionPrice: '大促销',
-                            marketPrice: '2.88',
-                            repertory: '5',
-                            inventoryTota: '10.00',
-                            grossSales: '40.00'
-                        },
-                    ]
+                    tableData: []
+                }
+            },
+            filters: {
+                //用过滤器做一个管道格式化价格
+                formatPrice(price) {
+                    return price.toFixed(2)
                 }
             },
             methods: {
-                handleEdit(index, row) {
-                    console.log(index, row);
+                //编辑的方法
+                handleEdit(cg_id) {
+                    //拿到要修改的数据的id，然后发送并跳转到修改页面
+                    location.href = "classify_edit.html?cg_id=" + cg_id;
                 },
-                handleDelete(index, row) {
-                    console.log(index, row);
+                // 删除的方法
+                handleDelete(cg_id) {
+                    if (confirm('确定要删除吗')) {
+                        $.get("/goods/del", {
+                            cg_id
+                        }, (result) => {
+                            if (result.isOk) {
+                                alert(result.msg)
+                                this.getDataAjax();
+                            } else {
+                                alert(result.msg);
+                            }
+                        })
+                    }
+                },
+                //将发ajax请求数据的方法抽出来，封装成一个函数，然后调用
+                getDataAjax() {
+                    //把查询加分页所需要传入后端的参数封装成一个对象
+                    let pageSearchObj = {
+                        currentPage : this.currentPage,   //当前页
+                        pageSize : this.pageSize,         //每页大小
+                        keywords: this.search.keywords,   //关键词
+                        category: this.search.category    //分类
+                    }
+                    //把页码和每一页要显示多少条数据（每页大小）传到后端路由
+                    $.get("/goods/listPagerSearch",pageSearchObj, (pagerData) => {
+                        this.tableData = pagerData.dataList;   //符合条件的分页数据的条数
+                        this.total = pagerData.total;          //符合条件的总记录数
+                    })
+                },
+                //改变每页大小（显示多少条数）分页的方法
+                handleSizeChange(val) {
+                    //console.log(`每页 ${val} 条`);
+
+                    this.pageSize = val; //修改每页大小
+                    //修改每页大小后要重新调用ajax，显示新的页码的数据
+                    this.getDataAjax();
+                },
+                //当前页码改变的方法
+                handleCurrentChange(val) {
+                    //console.log(`当前页: ${val}`);
+                    this.currentPage = val; //改变页码
+
+                    //改变页码后要重新调用ajax，显示新的页码的数据
+                    this.getDataAjax();
+                },
+                //查询的方法
+                onSearch(){
+                    //只实现了查询的方法
+                    // $.get("/goods/listSearch",this.search,(searchResult) => {
+                    //     this.tableData = searchResult
+                    // })
+
+                    //查询加分页
+                    this.getDataAjax()
                 }
+
+            },
+            mounted() {
+                //发起ajax到后端请求数据
+                this.getDataAjax();
+                //填充分类列表数据
+                $.get("/category/list", (dataList) => {
+                    this.categoryList = dataList;
+                })
+                //发起ajax到后端获取分页的数据
 
             }
         })

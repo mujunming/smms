@@ -207,7 +207,7 @@ html,body,#app,.el-container{
 
   /* 商品管理页面 */
   .product_list .el-input{
-    width: 80% !important;
+    width: 67% !important;
     float: left;
   }
 
@@ -223,11 +223,11 @@ html,body,#app,.el-container{
     margin-left: 0px !important;
   }
 
-  .product_list .keyWords .el-input{
+  .product_list .keyWord .el-input{
     width: 50% !important;
   } 
 
-  .product_list .keyWords .el-form-item__content{
+  .product_list .keyWord .el-form-item__content{
     width: 600px !important;
   }
 
@@ -255,4 +255,12 @@ html,body,#app,.el-container{
   clear:both;        
   visibility:hidden;        
   line-height: 0;
+}
+
+.el-pagination__editor{
+  width: 40px !important;
+}
+
+.red{
+  color: red;
 }

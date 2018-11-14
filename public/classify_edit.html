@@ -29,9 +29,9 @@
 						<!--用户分类-->
 						<el-form-item label="所属分类" prop='cg_fatherID'>
 							<el-select v-model="ruleForm2.cg_fatherID" placeholder="请选择分类">
-								<el-option label="---顶级分类---" value="---顶级分类---"></el-option>
+								<el-option label="---顶级分类---" value="0"></el-option>
 								<!-- 将从后端请求回来的数据循环出来，然后放到下拉列表中 -->
-								<!-- <el-option v-for="(c, index) in categoryList" :key="index" :label="c.cg_name" :value="c.cg_id"></el-option> -->
+								<el-option v-for="(c, index) in categoryList" :key="index" :label="c.cg_name" :value="c.cg_id"></el-option>
 							</el-select>
 						</el-form-item>
 						<!--分类名称-->
@@ -40,7 +40,7 @@
 						</el-form-item>
 						<!--状态-->
 						<el-form-item label="状态" prop="cg_isLocked">
-							<el-radio-group v-model="ruleForm2.cg_isLocked">
+							<el-radio-group  v-model="ruleForm2.cg_isLocked">
 								<el-radio label="1" value="1">启用</el-radio>
 								<el-radio label="0" value="0">禁用</el-radio>
 							</el-radio-group>
@@ -50,7 +50,6 @@
 							<el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
 						</el-form-item>
 					</el-form>
-					
 				</div>
 			</el-card>
 		</el-main>
@@ -73,9 +72,10 @@
 					ruleForm2: {
 						cg_fatherID : "",
 						cg_name : "",
-                        cg_isLocked : "1",
+                        cg_isLocked : '',
                         cg_id:''
 					},
+					categoryList: [],
 					//验证规则
 					rules2: {					
 						regionName: [{
@@ -105,11 +105,19 @@
                 let cg_id = reqUrl.split("=")[1];
                 //根据id去后台请求原来的旧数据
 				$.get("/category/getListByid",{cg_id},(dataList) => {
-                    let data = dataList[0];
-                    this.ruleForm2.cg_fatherID = data.cg_fatherID;
+					let data = dataList[0];
+					console.log(data)
+					if(data.father_name == null){
+						this.ruleForm2.cg_fatherID = "顶级分类"
+					}else{
+						this.ruleForm2.cg_fatherID = data.father_name
+					};
                     this.ruleForm2.cg_name = data.cg_name;
-                    this.ruleForm2.cg_isLocked = data.cg_isLocked;
-                    this.ruleForm2.cg_id = data.cg_id;  //把要修改的数据的id也保存到模型中
+                    this.ruleForm2.cg_isLocked = data.cg_isLocked.toString();
+					this.ruleForm2.cg_id = data.cg_id;  //把要修改的数据的id也保存到模型中
+				}),
+				$.get("/category/list",(categoryList) => {
+					this.categoryList = categoryList;
 				})
 			},
 			methods: {

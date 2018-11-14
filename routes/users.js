@@ -138,7 +138,7 @@ router.get("/checkState",(req,res) => {
   if(!username){
     res.send("alert('没有权限，请登录');location.href='login.html';")
   }else{
-    res.send("");
+    res.send("");  //验证成功，也需要返回一个空的字符串，否则路由会一直挂起
   }
 })
 module.exports = router;
